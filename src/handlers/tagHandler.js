@@ -41,9 +41,46 @@ async function remove(req,res) {
     }
 }
 
+// async function postAll() {
+//     const allTags = [
+//         {
+//             tagName : "greeting"
+//         },
+//         {
+//             tagName : "checking"
+//         },
+//         {
+//             tagName : "homescreenoverview"
+//         },
+//         {
+//             tagName : "addrequest"
+//         },
+//         {
+//             tagName : "attendance"
+//         },
+//         {
+//             tagName : "pendingrequests"
+//         },
+//         {
+//             tagName : "timekeeping"
+//         },
+//         {
+//             tagName : "checkinout"
+//         },
+//         {
+//             tagName : "goodbye"
+//         },
+//         {
+//             tagName : "thanks"
+//         },
+//     ];
+//     allTags.forEach(async (tag)=> await store.create(tag));
+// }
+
 const tagHandler = (app)=>{
     app.get('/tags' , index);
     app.post('/tags' , create);
+    // app.post('/tags' , postAll);
     app.get('/tags/:id' , show);
     app.delete('/tags/:id' , remove);
 }

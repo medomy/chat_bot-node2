@@ -43,7 +43,7 @@ const train = async (req,res) => {
         //   console.log(response);
 
     } catch (err) {
-        // res.status(404).error(`error training, ${err}`);
+        res.status(404).error(`error training, ${err}`);
         console.log(err);
     }
 
