@@ -1,4 +1,5 @@
 const config = require('../config/config.js').config;
+const fetch = require('node-fetch');
 class apiService {
     async getTags() {
         try{

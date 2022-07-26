@@ -9,6 +9,7 @@ const train = async (req,res) => {
         // Adds the utterances and intents for the NLP
         // training from database:
         const tags =await service.getTags();
+        console.log(tags);
         tags.forEach(async (tag)=> {
             const patterns = await service.getPatterns(tag.id);
             patterns.forEach((pattern)=> {
@@ -35,11 +36,9 @@ const train = async (req,res) => {
         // nlp.addAnswer('en', 'greetings.hello', 'Hey there!');
         // nlp.addAnswer('en', 'greetings.hello', 'Greetings!');
         await nlp.train();
-        // const response = await nlp.process('en', query);
+        const response = await nlp.process('en', req.body.query);
         // return response;
-        // res.json("done training").status(200);
-        //   const response = await nlp.process('en', 'I should go now');
-          res.json("training done !");
+          res.json(response.answer);
         //   console.log(response);
 
     } catch (err) {
@@ -54,6 +53,7 @@ const getAnswers = async (req, res) => {
         const dock = await dockStart({ use: ['Basic'] });
         const nlp = dock.get('nlp');
         const response = await nlp.process("en",req.body.query);
+        console.log(response);
         res.json(response.answer);
     } catch (err) {
         res.json(err).status(404);
