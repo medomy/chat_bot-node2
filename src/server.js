@@ -29,6 +29,7 @@ app.get('/',(req , res)=>{
 tagHandler(app);
 patternHandler(app);
 responseHandler(app);
+train.trainHandler(app);
 app.listen(port,()=>{
     console.log (`server opened at ${address}`);
 })
