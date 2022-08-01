@@ -9,17 +9,19 @@ const train = async (req,res) => {
         // Adds the utterances and intents for the NLP
         // training from database:
         const tags =await service.getTags();
-        console.log(tags);
-        tags.forEach(async (tag)=> {
-            const patterns = await service.getPatterns(tag.id);
-            patterns.forEach((pattern)=> {
-                nlp.addDocument('en' , pattern.pattern , tag.id);
+        for(let i =0 ; i < 10 ; i++) {
+            tags.forEach(async (tag)=> {
+                const patterns = await service.getPatterns(tag.id);
+                patterns.forEach((pattern)=> {
+                    nlp.addDocument('en' , pattern.pattern , tag.id);
+                })
+                const responses = await service.getResponses(tag.id);
+                responses.forEach((res)=>{
+                    nlp.addAnswer('en' , tag.id , res.response);
+                })
             })
-            const responses = await service.getResponses(tag.id);
-            responses.forEach((res)=>{
-                nlp.addAnswer('en' , tag.id , res.response);
-            })
-        })
+            await nlp.train();
+        }
         // static training example
         // nlp.addDocument('en', 'goodbye for now', 'greetings.bye');
         // nlp.addDocument('en', 'bye bye take care', 'greetings.bye');
@@ -35,11 +37,9 @@ const train = async (req,res) => {
         // nlp.addAnswer('en', 'greetings.bye', 'see you soon!');
         // nlp.addAnswer('en', 'greetings.hello', 'Hey there!');
         // nlp.addAnswer('en', 'greetings.hello', 'Greetings!');
-        await nlp.train();
-        const response = await nlp.process('en', req.body.query);
+        res.json('training done');
+        // const response = await nlp.process('en', req.body.query);
         // return response;
-          res.json(response.answer);
-        //   console.log(response);
 
     } catch (err) {
         res.status(404).error(`error training, ${err}`);
@@ -53,14 +53,20 @@ const getAnswers = async (req, res) => {
         const dock = await dockStart({ use: ['Basic'] });
         const nlp = dock.get('nlp');
         const response = await nlp.process("en",req.body.query);
+        if(typeof(response.answer) === "undefined"){
+            res.json("sorry , I can't understand");
+        }
+        else{
+            res.json(response.answer);
+        }
         console.log(response);
         res.json(response.answer);
     } catch (err) {
-        res.json(err).status(404);
+        res.json(`${err}`).status(404);
     }
 }
 const trainHandler = (app)=>{
-    app.get('/answer' , getAnswers);
+    app.post('/answer' , getAnswers);
     app.get('/train' , train);
 }
 module.exports = {

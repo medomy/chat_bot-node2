@@ -33,6 +33,14 @@ async function create(req,res) {
         
     }
 }
+async function update(req,res) {
+    try{
+        const response = await store.update(req.params.id , req.body.pattern);
+        res.json(response).status(200);
+    }catch(err){
+        res.json(`${err}`).status(400);
+    }
+}
 async function remove(req,res) {
     try{
         const response = await store.remove(req.params.id);
@@ -182,6 +190,7 @@ const patternHandler = (app)=>{
     app.get('/patterns' , index);
     app.post('/patterns' , create);
     // app.post('/patterns' , postAll);
+    app.patch('/patterns/:id' , update);
     app.get('/patterns/:id' , show);
     app.delete('/patterns/:id' , remove);
 }

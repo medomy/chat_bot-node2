@@ -38,6 +38,18 @@ class TagStore {
         }
     }
 
+    async update(id , tagName){
+        try{
+            const sql = "Update tags SET tagName=($1) WHERE id=($2);";
+            const connection = await client.connect();
+            const result = await connection.query(sql,[tagName , id]);
+            connection.release();
+            return result.rows[0];
+        }catch(err){
+            throw new Error(`can not update tag ${id}. error is ${err}`);
+        }
+    }
+
     async remove(id) {
         try{
             const sql = `DELETE FROM tags WHERE id=($1)`;

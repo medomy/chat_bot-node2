@@ -38,6 +38,18 @@ class PatternStore {
         }
     }
 
+    async update(id , pattern) {
+        try{
+            const sql = "UPDATE patterns SET pattern = ($1) WHERE patternId= ($2);";
+            const connection = await client.connect();
+            const result = await connection.query(sql,[pattern , id]);
+            connection.release();
+            return result.rows[0];
+        }catch(err){
+            throw new Error(`can not update pattern ${id}. error is ${err}`);
+        }
+    }
+
     async remove(id) {
         try{
             const sql = `DELETE FROM patterns WHERE patternId=($1)`;

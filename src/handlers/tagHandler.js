@@ -32,6 +32,14 @@ async function create(req,res) {
         
     }
 }
+async function update(req,res) {
+    try{
+        const response = await store.update(req.params.id , req.body.tagName);
+        res.json(response).status(200);
+    }catch{
+        res.json(`${err}`).status(400);
+    }
+}
 async function remove(req,res) {
     try{
         const response = await store.remove(req.params.id);
@@ -82,6 +90,7 @@ const tagHandler = (app)=>{
     app.post('/tags' , create);
     // app.post('/tags' , postAll);
     app.get('/tags/:id' , show);
+    app.patch('/tags/:id' , update);
     app.delete('/tags/:id' , remove);
 }
 

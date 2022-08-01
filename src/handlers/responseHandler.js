@@ -33,6 +33,14 @@ async function create(req,res) {
         
     }
 }
+async function update(req,res) {
+    try{
+        const response = await store.update(req.params.id , req.body.response);
+        res.json(response).status(200);
+    }catch(err){
+        res.json(`${err}`).status(400);
+    }
+}
 async function remove(req,res) {
     try{
         const response = await store.remove(req.params.id);
@@ -119,6 +127,7 @@ const responseHandler = (app)=>{
     app.post('/responses' , create);
     // app.post('/responses' , postAll);
     app.get('/responses/:id' , show);
+    app.patch('/responses:id' , update);
     app.delete('/responses/:id' , remove);
 }
 

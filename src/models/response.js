@@ -1,3 +1,4 @@
+
 const pool = require('../db.js');
 const client = pool.client;
 
@@ -35,6 +36,17 @@ class ResponseStore {
             return result.rows[0];
         }catch(err){
             throw new Error(`can not create response. error is ${err}`);
+        }
+    }
+    async update(id , res) {
+        try{
+            const sql = "UPDATE responses SET response = ($1) WHERE responseId= ($2);";
+            const connection = await client.connect();
+            const result = await connection.query(sql,[res , id]);
+            connection.release();
+            return result.rows[0];
+        }catch(err){
+            throw new Error(`can not update response ${id}. error is ${err}`);
         }
     }
 
