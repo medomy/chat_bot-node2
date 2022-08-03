@@ -42,8 +42,9 @@ async function update(req,res) {
 }
 async function remove(req,res) {
     try{
-        const response = await store.remove(req.params.id);
-        res.json(response).status(200);
+        console.log(req.params);
+        const response = await store.remove(Number(req.params.id));
+        res.json("deleted").status(200);
     }catch(err){
         res.json(`${err}`).status(400);
     }

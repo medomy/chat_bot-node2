@@ -14,11 +14,11 @@ const port = Number(process.env.port);
 
 const address = `http://localhost:${port}`;
 const corsOptions = {
-    origin: 'http://example.com',
+    origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 // applying cors and body-parser
-app.use([cors(corsOptions) , bodyParser.json()]);
+app.use([cors(corsOptions) , bodyParser.json() , bodyParser.urlencoded({ extended: true })]);
 
 app.get('/',(req , res)=>{
     res.send('chatBot API ');
