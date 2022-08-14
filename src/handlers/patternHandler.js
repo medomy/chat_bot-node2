@@ -4,7 +4,7 @@ const store = new patternModel.PatternStore();
 
 async function index(req,res) {
     try{
-        const response =await store.index(req.query.tagId);
+        const response =await store.index(req.query.tagId, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -13,7 +13,7 @@ async function index(req,res) {
 
 async function show(req,res) {
     try{
-        const response = await store.show(req.params.id);
+        const response = await store.show(req.params.id, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -26,7 +26,7 @@ async function create(req,res) {
             pattern : req.body.pattern,
             tagId : req.body.tagId
         }
-        const response = await store.create(newPattern);
+        const response = await store.create(newPattern, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -35,15 +35,16 @@ async function create(req,res) {
 }
 async function update(req,res) {
     try{
-        const response = await store.update(req.params.id , req.body.pattern);
-        res.json(response).status(200);
+        const _res = await store.show(req.params.id, req.headers["accept-language"]);
+        const response = await store.update(req.params.id , req.body.pattern , _res.tagid);
+        res.json("updated").status(200);
     }catch(err){
         res.json(`${err}`).status(400);
     }
 }
 async function remove(req,res) {
     try{
-        const response = await store.remove(req.params.id);
+        const response = await store.remove(req.params.id, req.headers["accept-language"]);
         console.log(response);
         res.json("deleted").status(200);
     }catch(err){
@@ -191,7 +192,7 @@ const patternHandler = (app)=>{
     app.get('/patterns' , index);
     app.post('/patterns' , create);
     // app.post('/patterns' , postAll);
-    app.patch('/patterns/:id' , update);
+    app.put('/patterns/:id' , update);
     app.get('/patterns/:id' , show);
     app.delete('/patterns/:id' , remove);
 }

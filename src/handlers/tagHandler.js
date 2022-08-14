@@ -4,7 +4,7 @@ const store = new tagModel.TagStore();
 
 async function index(req,res) {
     try{
-        const response =await store.index();
+        const response =await store.index(req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -13,7 +13,7 @@ async function index(req,res) {
 
 async function show(req,res) {
     try{
-        const response = await store.show(req.params.id);
+        const response = await store.show(req.params.id, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -25,7 +25,7 @@ async function create(req,res) {
         const newTag = {
             tagName : req.body.tagName,
         }
-        const response = await store.create(newTag);
+        const response = await store.create(newTag, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -34,8 +34,8 @@ async function create(req,res) {
 }
 async function update(req,res) {
     try{
-        const response = await store.update(req.params.id , req.body.tagName);
-        res.json(response).status(200);
+        const response = await store.update(req.params.id , req.body.tagName, req.headers["accept-language"]);
+        res.json("updated").status(200);
     }catch{
         res.json(`${err}`).status(400);
     }
@@ -43,7 +43,7 @@ async function update(req,res) {
 async function remove(req,res) {
     try{
         console.log(req.params);
-        const response = await store.remove(Number(req.params.id));
+        const response = await store.remove(Number(req.params.id), req.headers["accept-language"]);
         res.json("deleted").status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -91,7 +91,7 @@ const tagHandler = (app)=>{
     app.post('/tags' , create);
     // app.post('/tags' , postAll);
     app.get('/tags/:id' , show);
-    app.patch('/tags/:id' , update);
+    app.put('/tags/:id' , update);
     app.delete('/tags/:id' , remove);
 }
 

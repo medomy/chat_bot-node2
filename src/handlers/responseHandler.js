@@ -4,7 +4,7 @@ const store = new responseModel.ResponseStore();
 
 async function index(req,res) {
     try{
-        const response =await store.index(req.query.tagId);
+        const response =await store.index(req.query.tagId, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -13,7 +13,7 @@ async function index(req,res) {
 
 async function show(req,res) {
     try{
-        const response = await store.show(req.params.id);
+        const response = await store.show(req.params.id, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -26,7 +26,7 @@ async function create(req,res) {
             response : req.body.response,
             tagId : req.body.tagId
         }
-        const response = await store.create(newResponse);
+        const response = await store.create(newResponse, req.headers["accept-language"]);
         res.json(response).status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -34,15 +34,16 @@ async function create(req,res) {
 }
 async function update(req,res) {
     try{
-        const response = await store.update(req.params.id , req.body.response);
-        res.json(response).status(200);
+        const _pat = await store.show(req.params.id, req.headers["accept-language"]);
+        const response = await store.update(req.params.id , req.body.response , _pat.tagid,req.headers["accept-language"]);
+        res.json("updated").status(200);
     }catch(err){
         res.json(`${err}`).status(400);
     }
 }
 async function remove(req,res) {
     try{
-        const response = await store.remove(req.params.id);
+        const response = await store.remove(req.params.id, req.headers["accept-language"]);
         res.json("deleted").status(200);
     }catch(err){
         res.json(`${err}`).status(400);
@@ -126,7 +127,7 @@ const responseHandler = (app)=>{
     app.post('/responses' , create);
     // app.post('/responses' , postAll);
     app.get('/responses/:id' , show);
-    app.patch('/responses:id' , update);
+    app.put('/responses:id' , update);
     app.delete('/responses/:id' , remove);
 }
 
